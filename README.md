@@ -8,4 +8,4 @@
     7-write the command (php artisan migrate)
     8-write the command (php artisan addPosts)
     9-write the command (php artisan serve)
-    10-write the command (php artisan websockets:serve)
+    10-in new tap of CMD write the command (php artisan websockets:serve)
