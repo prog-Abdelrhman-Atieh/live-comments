@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Http\Controllers;
+use App\comment;
+use App\post;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Events\addComment;
+use Illuminate\Foundation\Auth\User;
+
+class CommentController extends Controller
+{
+    public function index(post $post){
+        return response()->json($post->comments()->width('user')->latest()->get());
+    }
+    public function store(Request $request,post $post){
+        $comment=$post->comments()->create([
+            'content'=>$request->content,
+            'user_id'=>Auth::id(),
+        ]);
+        $comment=comment::where('id',$comment->id)->with('user')->first();
+        return $comment->toJson();
+    }
+    public function show(){
+        $p=post::with('user')->with('comments')->with('user')->get();
+        return $p;
+    }
+    public function saveCom(){
+        $data=request()->validate([
+            'post_id'=>'required',
+            'content'=>'required',
+            'user_id'=>'required',
+            'auther_name'=>'required',
+        ]);
+        $request=comment::create($data);
+        event(new addComment($request));
+        return $request;
+    }
+}
