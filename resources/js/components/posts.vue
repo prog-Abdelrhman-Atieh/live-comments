@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="container" v-for='p in posts'>
+    <div class="container my-posts" v-for='p in posts'>
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
@@ -47,3 +47,8 @@
         }
     }
 </script>
+<style scoped>
+    .my-posts{
+        margin-top: 20px;
+    }
+</style>
