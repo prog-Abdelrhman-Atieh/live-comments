@@ -7,9 +7,15 @@
                     <div class="card-header">{{p.user.name}} <small>{{p.user.email}}</small></div>
                     <div class="card-body">
                         {{p.content}}
-                        <br>
-                        <a :href="'/'+p.id+'/comments'">Show all comments...</a>
-                        <add-comment :postID='p.id' :comments='p.comments' :user='user'></add-comment>
+                        <br><hr>
+                        <div class="comment" v-if="p.LC">
+                            <div class="header"><small>{{p.LC.auther_name}}</small> <small>{{p.LC.created_at}}</small></div>
+                            <div class="comment-body">
+                                {{p.LC.content}}
+                            </div>
+                            <hr>
+                        </div>
+                        <a :href="'/'+p.id+'/comments'">{{p.NOC}} comments...</a>
                     </div>
                 </div>
             </div>
@@ -32,6 +38,7 @@
             axios.post('/api/posts/',{}).then(
                 response=>{
                     this.posts=response.data;
+                    console.log(response.data);
                     this.comments=this.posts.comments || [];
                 }
                 ,err=>{
@@ -50,5 +57,12 @@
 <style scoped>
     .my-posts{
         margin-top: 20px;
+    }
+    .comment{
+        margin-top: 20px;
+        box-sizing: border-box;
+        padding: 5px 15px 15px;
+        border: solid 1px #ccc;
+        border-radius: 7px;
     }
 </style>

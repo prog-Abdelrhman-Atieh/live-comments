@@ -26,4 +26,7 @@ class HomeController extends Controller
         $post=post::with('user')->get();
         return view('home',compact('post'));
     }
+    public function show(post $post){
+        return view('posts.post',compact('post'));
+    }
 }

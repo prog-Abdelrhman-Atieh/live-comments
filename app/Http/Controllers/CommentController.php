@@ -6,13 +6,16 @@ use App\post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\addComment;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 
 class CommentController extends Controller
 {
+    /////////////////////////////////////////////////////////////////////////// IDEX
     public function index(post $post){
-        return response()->json($post->comments()->width('user')->latest()->get());
+        return response()->json($post->with('user')->with('comments')->get());
     }
+    /////////////////////////////////////////////////////////////////////////// STORE
     public function store(Request $request,post $post){
         $comment=$post->comments()->create([
             'content'=>$request->content,
@@ -21,10 +24,17 @@ class CommentController extends Controller
         $comment=comment::where('id',$comment->id)->with('user')->first();
         return $comment->toJson();
     }
+    ///////////////////////////////////////////////////////////////////////// SHOW
     public function show(){
-        $p=post::with('user')->with('comments')->with('user')->get();
-        return $p;
+        $db=post::select("*")->with('user')->get();
+        $db->each(function($p){
+            $p->NOC=count(post::where('id',$p->id)->with('comments')->first()->comments);
+            $p->LC=($p->NOC != 0)?
+            post::where('id',$p->id)->with('comments')->first()->comments[($p->NOC == 1)?0:$p->NOC-1]:'';
+        });
+        return $db;
     }
+    ///////////////////////////////////////////////////////////////////////// SAVE COMMENTS
     public function saveCom(){
         $data=request()->validate([
             'post_id'=>'required',

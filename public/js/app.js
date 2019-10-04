@@ -1855,6 +1855,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
@@ -1868,13 +1869,16 @@ var D = {
   mounted: function mounted() {
     var _this = this;
 
-    this.u = JSON.parse(this.user);
-    this.coms = this.comments;
+    //ppp the post id
+    //console.log(this.user);
+    this.u = this.user;
+    this.coms = this.comments; //console.log(this.ppp);
+
     window.Echo.channel('comment').listen('addComment', function (e) {
-      if (_this.postID == e.message.post_id) _this.coms.unshift(e.message);
+      if (_this.ppp == e.message.post_id) _this.coms.unshift(e.message);
     });
   },
-  props: ['postID', 'comments', 'user'],
+  props: ['comments', 'user', 'ppp'],
   data: function data() {
     return {
       comment: null,
@@ -1887,15 +1891,16 @@ var D = {
       var _this2 = this;
 
       if (this.comment === null) return;
-      axios.post("api/saveComm", {
+      var info = {
         user_id: this.u.id,
         auther_name: this.u.name,
         post_id: PID,
         content: this.comment
-      }).then(function (response) {
+      };
+      return axios.post("/api/saveComm", info).then(function (response) {
         //console.log(response.data);
         _this2.comment = null;
-      }, function (err) {
+      })["catch"](function (err) {
         console.log(err);
       });
     }
@@ -1934,6 +1939,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1949,6 +1960,7 @@ __webpack_require__.r(__webpack_exports__);
     console.log(this.post);
     axios.post('/api/posts/', {}).then(function (response) {
       _this.posts = response.data;
+      console.log(response.data);
       _this.comments = _this.posts.comments || [];
     }, function (err) {
       _this.error = err;
@@ -3938,7 +3950,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.my-posts[data-v-595a99d0]{\n    margin-top: 20px;\n}\n", ""]);
+exports.push([module.i, "\n.my-posts[data-v-595a99d0]{\n    margin-top: 20px;\n}\n.comment[data-v-595a99d0]{\n    margin-top: 20px;\n    box-sizing: border-box;\n    padding: 5px 15px 15px;\n    border: solid 1px #ccc;\n    border-radius: 7px;\n}\n", ""]);
 
 // exports
 
@@ -30086,7 +30098,7 @@ var render = function() {
               ) {
                 return null
               }
-              return _vm.send(_vm.postID)
+              return _vm.send(_vm.ppp)
             },
             input: function($event) {
               if ($event.target.composing) {
@@ -30103,7 +30115,7 @@ var render = function() {
             staticClass: "btn btn-primary mt-2",
             on: {
               click: function($event) {
-                return _vm.send(_vm.postID)
+                return _vm.send(_vm.ppp)
               }
             }
           },
@@ -30114,7 +30126,8 @@ var render = function() {
       _vm._l(_vm.coms, function(com) {
         return _c("div", [
           _c("small", { staticClass: "name" }, [
-            _vm._v(_vm._s(com.auther_name))
+            _vm._v(_vm._s(com.auther_name) + " "),
+            _c("small", [_vm._v(_vm._s(com.created_at))])
           ]),
           _vm._v(" "),
           _c("div", [
@@ -30162,31 +30175,39 @@ var render = function() {
                 _c("small", [_vm._v(_vm._s(p.user.email))])
               ]),
               _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "card-body" },
-                [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(p.content) +
-                      "\n                        "
-                  ),
-                  _c("br"),
-                  _vm._v(" "),
-                  _c("a", { attrs: { href: "/" + p.id + "/comments" } }, [
-                    _vm._v("Show all comments...")
-                  ]),
-                  _vm._v(" "),
-                  _c("add-comment", {
-                    attrs: {
-                      postID: p.id,
-                      comments: p.comments,
-                      user: _vm.user
-                    }
-                  })
-                ],
-                1
-              )
+              _c("div", { staticClass: "card-body" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(p.content) +
+                    "\n                        "
+                ),
+                _c("br"),
+                _c("hr"),
+                _vm._v(" "),
+                p.LC
+                  ? _c("div", { staticClass: "comment" }, [
+                      _c("div", { staticClass: "header" }, [
+                        _c("small", [_vm._v(_vm._s(p.LC.auther_name))]),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(p.LC.created_at))])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "comment-body" }, [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(p.LC.content) +
+                            "\n                            "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("hr")
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("a", { attrs: { href: "/" + p.id + "/comments" } }, [
+                  _vm._v(_vm._s(p.NOC) + " comments...")
+                ])
+              ])
             ])
           ])
         ])
