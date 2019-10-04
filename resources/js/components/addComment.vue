@@ -26,14 +26,11 @@
         disableStats: true,
     });
     const D={
-    mounted(){//ppp the post id
-        //console.log(this.user);
+    mounted(){
         this.u=this.user;
         this.coms=this.comments;
-        //console.log(this.ppp);
-        window.Echo.channel('comment').listen('addComment',e=>{
-            if(this.ppp == e.message.post_id)
-                this.coms.unshift(e.message);
+        window.Echo.channel(`comment.${this.ppp}`).listen('addComment',e=>{
+            this.coms.unshift(e);
         });
     },
     props:['comments','user','ppp'],
@@ -50,7 +47,6 @@
                 var info={user_id:this.u.id,auther_name:this.u.name,post_id:PID,content:this.comment};
                 return axios.post(`/api/saveComm`,info).then(
                     response=>{
-                        //console.log(response.data);
                         this.comment=null;
                     }
                 ).catch(err=>{

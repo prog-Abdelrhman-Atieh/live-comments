@@ -32,6 +32,14 @@ class addComment implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('comment');
+        return new Channel('comment.'.$this->message->post_id);
+    }
+    public function broadcastWith()
+    {
+        return[
+            'auther_name'=>$this->message->auther_name,
+            'created_at'=>$this->message->created_at,
+            'content'=>$this->message->content,
+        ];
     }
 }

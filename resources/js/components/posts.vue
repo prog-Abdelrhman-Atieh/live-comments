@@ -38,7 +38,6 @@
             axios.post('/api/posts/',{}).then(
                 response=>{
                     this.posts=response.data;
-                    console.log(response.data);
                     this.comments=this.posts.comments || [];
                 }
                 ,err=>{

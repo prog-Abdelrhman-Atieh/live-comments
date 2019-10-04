@@ -1869,13 +1869,10 @@ var D = {
   mounted: function mounted() {
     var _this = this;
 
-    //ppp the post id
-    //console.log(this.user);
     this.u = this.user;
-    this.coms = this.comments; //console.log(this.ppp);
-
-    window.Echo.channel('comment').listen('addComment', function (e) {
-      if (_this.ppp == e.message.post_id) _this.coms.unshift(e.message);
+    this.coms = this.comments;
+    window.Echo.channel("comment.".concat(this.ppp)).listen('addComment', function (e) {
+      _this.coms.unshift(e);
     });
   },
   props: ['comments', 'user', 'ppp'],
@@ -1898,7 +1895,6 @@ var D = {
         content: this.comment
       };
       return axios.post("/api/saveComm", info).then(function (response) {
-        //console.log(response.data);
         _this2.comment = null;
       })["catch"](function (err) {
         console.log(err);
@@ -1960,7 +1956,6 @@ __webpack_require__.r(__webpack_exports__);
     console.log(this.post);
     axios.post('/api/posts/', {}).then(function (response) {
       _this.posts = response.data;
-      console.log(response.data);
       _this.comments = _this.posts.comments || [];
     }, function (err) {
       _this.error = err;
