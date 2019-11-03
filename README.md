@@ -7,6 +7,7 @@
     6-Create an empty database for my application and name it as laravel
     7-write both commands (php artisan vendor:publish --provider="BeyondCode\LaravelWebSockets\WebSocketsServiceProvider"--tag="migrations") and (php artisan vendor:publish --provider="BeyondCode\LaravelWebSockets\WebSocketsServiceProvider" --tag="config")
     7-write the command (php artisan migrate)
-    8-write the command (php artisan addPosts)
-    9-write the command (php artisan serve)
-    10-in new tap of CMD write the command (php artisan websockets:serve)
+    8-write the command (npm run dev)
+    9-write the command (php artisan addPosts)
+    10-write the command (php artisan serve)
+    11-in new tap of CMD write the command (php artisan websockets:serve)
