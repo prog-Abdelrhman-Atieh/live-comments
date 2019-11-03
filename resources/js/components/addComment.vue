@@ -20,7 +20,7 @@
     window.Pusher = require('pusher-js');
     window.Echo = new Echo({
         broadcaster: 'pusher',
-        key: 'abcdef',
+        key: 'ABCDEF',
         wsHost: window.location.hostname,
         wsPort: 6001,
         disableStats: true,

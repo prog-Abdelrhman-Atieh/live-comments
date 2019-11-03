@@ -42,6 +42,7 @@ class CommentController extends Controller
             'user_id'=>'required',
             'auther_name'=>'required',
         ]);
+        //dd('work');
         $request=comment::create($data);
         event(new addComment($request));
         return $request;
