@@ -5,7 +5,6 @@
     4-write the command (npm install)
     5-write the command (php artisan key:generate)
     6-Create an empty database for my application and name it as laravel
-    7-write both commands (php artisan vendor:publish --provider="BeyondCode\LaravelWebSockets\WebSocketsServiceProvider"--tag="migrations") and (php artisan vendor:publish --provider="BeyondCode\LaravelWebSockets\WebSocketsServiceProvider" --tag="config")
     7-write the command (php artisan migrate)
     8-write the command (npm run dev)
     9-write the command (php artisan addPosts)
