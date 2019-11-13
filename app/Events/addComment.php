@@ -40,6 +40,7 @@ class addComment implements ShouldBroadcast
             'auther_name'=>$this->message->auther_name,
             'created_at'=>$this->message->created_at,
             'content'=>$this->message->content,
+            'user_id'=>$this->message->user_id,
         ];
     }
 }

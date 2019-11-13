@@ -6,7 +6,7 @@
     </div>
 
     <div v-for="com in coms">
-        <small class="name">{{com.auther_name}} <small>{{com.created_at}}</small></small>
+        <a :href="`/${com.user_id}`"><small class="name">{{com.auther_name}} <small>{{com.created_at}}</small></small></a>
         <div>
             {{com.content}}
         </div>
@@ -32,6 +32,7 @@
         window.Echo.channel(`comment.${this.ppp}`).listen('addComment',e=>{
             this.coms.unshift(e);
         });
+        //console.log(this.coms);
     },
     props:['comments','user','ppp'],
     data:function(){

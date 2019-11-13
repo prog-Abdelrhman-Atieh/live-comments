@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 */
 Route::get('/posts/{post}/comments','CommentController@index');
 Route::post('/posts','CommentController@show');
+Route::post('/addPost/{user}','userController@addP');
 Route::post( '/saveComm','CommentController@saveCom');
 Route::middleware('auth:api')->group(function () {
     Route::post('/posts/{post}/comment','CommentController@store');

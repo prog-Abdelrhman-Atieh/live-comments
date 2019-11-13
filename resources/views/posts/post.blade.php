@@ -7,7 +7,7 @@
             </div>
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{$post->user->name}} <small>{{$post->user->email}}</small></div>
+                    <div class="card-header"><a href="/{{$post->user->id}}">{{$post->user->name}} <small>{{$post->user->email}}</small></a></div>
                     <div class="card-body">
                         {{$post->content}}
                         <br>

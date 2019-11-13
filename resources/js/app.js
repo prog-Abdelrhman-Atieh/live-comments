@@ -20,8 +20,9 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('my-posts', require('./components/posts.vue').default);
+/*Vue.component('my-posts', require('./components/posts.vue').default);
 Vue.component('add-comment', require('./components/addComment.vue').default);
+Vue.component('add-post', require('./components/addPost.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -30,5 +31,11 @@ Vue.component('add-comment', require('./components/addComment.vue').default);
 window.onload=()=>{
     const app = new Vue({
         el: '#main',
+        components:{
+            'main-comp':require('./components/mainComponent.vue').default,
+            'my-posts':require('./components/posts.vue').default,
+            'add-comment':require('./components/addComment.vue').default,
+            'add-post':require('./components/addPost.vue').default,
+        }
     });
 }

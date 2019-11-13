@@ -26,7 +26,11 @@ class CommentController extends Controller
     }
     ///////////////////////////////////////////////////////////////////////// SHOW
     public function show(){
-        $db=post::select("*")->with('user')->get();
+        if(request()->has('user_id'))
+            $db=post::where('user_id',request()->get('user_id'))->orderBy('id', 'DESC')->with('user')->get();
+        else
+            $db=post::with('user')->orderBy('id', 'DESC')->get();
+            
         $db->each(function($p){
             $p->NOC=count(post::where('id',$p->id)->with('comments')->first()->comments);
             $p->LC=($p->NOC != 0)?
@@ -42,7 +46,6 @@ class CommentController extends Controller
             'user_id'=>'required',
             'auther_name'=>'required',
         ]);
-        //dd('work');
         $request=comment::create($data);
         event(new addComment($request));
         return $request;

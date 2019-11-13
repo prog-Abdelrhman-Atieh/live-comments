@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{p.user.name}} <small>{{p.user.email}}</small></div>
+                    <div class="card-header"><img :src="p.user.user_image" class="post-image"> <a :href="`/${p.user.id}`">{{p.user.name}} </a></div>
                     <div class="card-body">
                         {{p.content}}
                         <br><hr>
@@ -34,8 +34,12 @@
                 comments:[],
             };
         },
-        mounted:function(){console.log(this.post);
-            axios.post('/api/posts/',{}).then(
+        props:[
+            'user','userposts',
+        ],
+        mounted:function(){
+            var sendInfos= (this.userposts)?{'user_id':this.userposts}:{};
+            axios.post('/api/posts/',sendInfos).then(
                 response=>{
                     this.posts=response.data;
                     this.comments=this.posts.comments || [];
@@ -46,9 +50,6 @@
             );
 
         },
-        props:[
-            'user',
-        ],
         methods:{
         }
     }
@@ -56,6 +57,10 @@
 <style scoped>
     .my-posts{
         margin-top: 20px;
+    }
+    .post-image{
+        width: 60px;height: auto;
+        border-radius: 100%;
     }
     .comment{
         margin-top: 20px;
