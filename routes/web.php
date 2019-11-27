@@ -18,4 +18,3 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/{post}/comments', 'HomeController@show')->name('comments');
 Route::get('/{user}', 'userController@show')->name('user');
-Route::patch('/user/{user}', 'userController@updateImage');

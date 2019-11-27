@@ -7,6 +7,11 @@
                     <div class="card-header"><img :src="p.user.user_image" class="post-image"> <a :href="`/${p.user.id}`">{{p.user.name}} </a></div>
                     <div class="card-body">
                         {{p.content}}
+                        <div class="post-gal">
+                            <div class="image-contener" v-for="M in p.media">
+                                <img :src="M.src">
+                            </div>
+                        </div>
                         <br><hr>
                         <div class="comment" v-if="p.LC">
                             <div class="header"><small>{{p.LC.auther_name}}</small> <small>{{p.LC.created_at}}</small></div>
@@ -43,6 +48,7 @@
                 response=>{
                     this.posts=response.data;
                     this.comments=this.posts.comments || [];
+                    console.log(this.posts);
                 }
                 ,err=>{
                     this.error=err;
@@ -68,5 +74,24 @@
         padding: 5px 15px 15px;
         border: solid 1px #ccc;
         border-radius: 7px;
+    }
+    .post-gal{
+        width: 100%;
+    }
+    .post-gal::after{
+        content: '';
+        display: table;
+        clear: both;
+    }
+    .image-contener{
+        width:49%;
+        float: left;
+    }
+    .image-contener img{
+        width: 100%;
+        height: auto;
+    }
+    @media only screen  and (max-width:500px){
+        
     }
 </style>

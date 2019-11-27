@@ -16,6 +16,9 @@ Route::get('/posts/{post}/comments','CommentController@index');
 Route::post('/posts','CommentController@show');
 Route::post('/addPost/{user}','userController@addP');
 Route::post( '/saveComm','CommentController@saveCom');
+Route::post('/user/{user}', 'userController@updateImage');
+Route::post('/files/{user}', 'userController@uploadFiles');
+Route::get('/getMidea/{user}','userController@getMidea');
 Route::middleware('auth:api')->group(function () {
     Route::post('/posts/{post}/comment','CommentController@store');
 });

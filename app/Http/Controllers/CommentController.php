@@ -27,9 +27,9 @@ class CommentController extends Controller
     ///////////////////////////////////////////////////////////////////////// SHOW
     public function show(){
         if(request()->has('user_id'))
-            $db=post::where('user_id',request()->get('user_id'))->orderBy('id', 'DESC')->with('user')->get();
+            $db=post::where('user_id',request()->get('user_id'))->orderBy('id', 'DESC')->with('user','media')->get();
         else
-            $db=post::with('user')->orderBy('id', 'DESC')->get();
+            $db=post::with('user','media')->orderBy('id', 'DESC')->get();
             
         $db->each(function($p){
             $p->NOC=count(post::where('id',$p->id)->with('comments')->first()->comments);

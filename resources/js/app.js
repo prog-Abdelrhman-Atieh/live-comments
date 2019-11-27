@@ -36,6 +36,7 @@ window.onload=()=>{
             'my-posts':require('./components/posts.vue').default,
             'add-comment':require('./components/addComment.vue').default,
             'add-post':require('./components/addPost.vue').default,
+            'user-image':require('./components/userImage.vue').default
         }
     });
 }

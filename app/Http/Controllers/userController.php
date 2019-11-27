@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\post;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth ;
 
 class userController extends Controller
 {
@@ -16,25 +18,46 @@ class userController extends Controller
         $post=$user->posts()->create([
             'content'=>request()->get('content'),
             ]);
-        return $post;
+        foreach(request()->get('media') as $m){
+            $post->media()->create([
+                'src'=>$m
+            ]);
+        }
+        return request()->get('media');
     }
     public function updateImage(User $user){
         $this->validateImage();
-        $this->saveFile($user);
-        return back();
+        return $this->saveUserImage($user);
+    }
+    public function uploadFiles(User $user){
+        $this->validateFiles();
+        return $this->saveFile($user);
+    }
+    public function getMidea(User $user){
+        return Storage::files('public/images/'.$user->id);
     }
     private function validateImage(){
-        if(request()->hasFile('image')){
+        if(request()->hasFile('img')){
             request()->validate([
-                'image'=>'required|file|image|max:15000'
+                'img'=>'required|file|image|max:15000',
             ]);
         }
     }
-    private function saveFile($user){
-        if(request()->has('image')){
+    private function validateFiles(){
+        request()->validate([
+            'UF'=>'required|file|mimetypes:image/*,video/*,|max:40000',
+        ]);
+    }
+    private function saveUserImage($user){
+        if(request()->has('img')){
             $user->update([
-                'user_image'=>'storage/'.request()->image->store('images/'.$user->id,'public'),
+                'user_image'=>'storage/'.request()->img->store('images/'.$user->id,'public'),
                 ]);
+            return $user->user_image;
         }
+    }
+    private function saveFile($user){
+        $src=request()->UF->store('images/'.$user->id,'public');
+        return $src;
     }
 }
