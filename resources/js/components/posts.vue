@@ -1,5 +1,6 @@
 <template>
 <div>
+    <div :class='(newPostsAdded)?"new-Posts show":"new-Posts hide"' ref="newPosts" @click='refresh()'>&clubs; {{newPostsAdded}} new Post</div>
     <div class="container my-posts" v-for='p in posts'>
         <div class="row justify-content-center">
             <div class="col-md-8">
@@ -8,8 +9,8 @@
                     <div class="card-body">
                         {{p.content}}
                         <div class="post-gal">
-                            <div class="image-contener" v-for="M in p.media">
-                                <img :src="M.src">
+                            <div class="image-contener" v-for="M in p.media" :style="'width:'+(100/p.media.length-1)+'%;'">
+                                <embed :src="M.src">
                             </div>
                         </div>
                         <br><hr>
@@ -30,6 +31,15 @@
 </template>
 
 <script>
+    import Echo from "laravel-echo"
+    window.Pusher = require('pusher-js');
+    window.Echo = new Echo({
+        broadcaster: 'pusher',
+        key: 'ABCDEF',
+        wsHost: window.location.hostname,
+        wsPort: 6001,
+        disableStats: true,
+    });
     export default {
         data:function(){
             return {
@@ -37,26 +47,38 @@
                 posts:null,
                 error:null,
                 comments:[],
+                newPostsAdded:0,
             };
         },
         props:[
             'user','userposts',
         ],
         mounted:function(){
+            window.Echo.channel(`newMessage`).listen('newPostCheck',e=>{
+                this.newPostsAdded++;
+            });
             var sendInfos= (this.userposts)?{'user_id':this.userposts}:{};
             axios.post('/api/posts/',sendInfos).then(
                 response=>{
                     this.posts=response.data;
                     this.comments=this.posts.comments || [];
-                    console.log(this.posts);
                 }
                 ,err=>{
                     this.error=err;
                 }
             );
-
         },
         methods:{
+            refresh(){
+                const NPA=this.newPostsAdded;
+                this.newPostsAdded=0;
+                axios.post('/api/newPosts',{newPostsAdded:NPA}).then(
+                    response=>{
+                        this.posts.unshift(...response.data);
+                        window.scrollTo(0,0);
+                    }
+                );
+            }
         }
     }
 </script>
@@ -84,14 +106,46 @@
         clear: both;
     }
     .image-contener{
-        width:49%;
         float: left;
     }
-    .image-contener img{
+    .image-contener embed{
         width: 100%;
         height: auto;
     }
-    @media only screen  and (max-width:500px){
-        
+    .new-Posts{
+        position: fixed;
+        top: 5px;left: 50%;
+        transform: translate(-50%,-150%);
+        padding: 15px;
+        background-color:#07f;
+        border-radius: 15px;
+        color:#fff;
+        cursor: pointer;
+        z-index: 10;
     }
+    .hide{
+        animation: hide 1.5s forwards;
+    }
+    .show{
+        animation: show 1.5s forwards;
+    }
+    @keyframes hide {
+        from{
+            transform: translateY(0);
+        }
+        to{
+            transform: translateY(-150%);
+        }
+    }
+    @keyframes show {
+        from{
+            transform: translateY(-150%);
+        }
+        to{
+            transform: translateY(0);
+        }
+    }
+    /*@media only screen  and (max-width:500px){
+        
+    }*/
 </style>

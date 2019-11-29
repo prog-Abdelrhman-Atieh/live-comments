@@ -20,9 +20,9 @@ class newPostCheck implements ShouldBroadcast
      * @return void
      */
     private $message;
-    public function __construct($mess)
+    public function __construct()
     {
-        $this->message=$mess;
+        //constructor
     }
 
     /**
@@ -32,12 +32,12 @@ class newPostCheck implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('newMessage');
+        return new Channel('newMessage');
     }
     public function broadcastWith()
     {
         return[
-            'post'=>$this->message->post,
+            'checks'=>1,
         ];
     }
 }

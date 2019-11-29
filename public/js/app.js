@@ -1965,6 +1965,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 var newPost = {
   mounted: function mounted() {},
   props: ['user_id'],
@@ -1995,7 +1996,12 @@ var newPost = {
       var _this2 = this;
 
       axios.get("/api/getMidea/".concat(this.user_id)).then(function (response) {
-        _this2.media = response.data;
+        _this2.media = response.data; //setTimeout(()=>{
+        //this.$refs.mediaHolder.forEach(element => {
+        //    //element.play=false;
+        //    console.log(element);
+        //});
+        //    },200);
       })["catch"](function (err) {
         console.log(err);
       });
@@ -2026,15 +2032,15 @@ var newPost = {
       var counter = -1,
           ele = this.selected.find(function (element) {
         counter++;
-        return element == e.target.src;
+        return element == e.target.parentElement.children[1].src;
       });
 
       if (ele != undefined) {
         this.selected.splice(counter, 1);
-        e.target.parentElement.children[1].style.display = 'none';
+        e.target.parentElement.children[2].style.display = 'none';
       } else {
-        this.selected.push(e.target.src);
-        e.target.parentElement.children[1].style.display = 'inline-block';
+        this.selected.push(e.target.parentElement.children[1].src);
+        e.target.parentElement.children[2].style.display = 'inline-block';
       }
     }
   }
@@ -2084,6 +2090,15 @@ var mainC = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var laravel_echo__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-echo/dist/echo.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 //
 //
 //
@@ -2115,31 +2130,60 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
+window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
+window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
+  broadcaster: 'pusher',
+  key: 'ABCDEF',
+  wsHost: window.location.hostname,
+  wsPort: 6001,
+  disableStats: true
+});
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       UD: JSON.parse(this.user),
       posts: null,
       error: null,
-      comments: []
+      comments: [],
+      newPostsAdded: 0
     };
   },
   props: ['user', 'userposts'],
   mounted: function mounted() {
     var _this = this;
 
+    window.Echo.channel("newMessage").listen('newPostCheck', function (e) {
+      _this.newPostsAdded++;
+    });
     var sendInfos = this.userposts ? {
       'user_id': this.userposts
     } : {};
     axios.post('/api/posts/', sendInfos).then(function (response) {
       _this.posts = response.data;
       _this.comments = _this.posts.comments || [];
-      console.log(_this.posts);
     }, function (err) {
       _this.error = err;
     });
   },
-  methods: {}
+  methods: {
+    refresh: function refresh() {
+      var _this2 = this;
+
+      var NPA = this.newPostsAdded;
+      this.newPostsAdded = 0;
+      axios.post('/api/newPosts', {
+        newPostsAdded: NPA
+      }).then(function (response) {
+        var _this2$posts;
+
+        (_this2$posts = _this2.posts).unshift.apply(_this2$posts, _toConsumableArray(response.data));
+
+        window.scrollTo(0, 0);
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -4172,7 +4216,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.main[data-v-672075e6]{\n    width: 730px;\n    margin: 0 auto;\n}\n.form[data-v-672075e6]{\n    width: 100%;\n}\n.form>.content[data-v-672075e6]{\n    width: 100%;\n    resize: none;\n    scroll-behavior: smooth;\n    border:none;\n    border-bottom: 1px solid #ccc;\n}\n.button[data-v-672075e6]{\n    background-color: #07f;\n    border:none;\n    display: inline-block;\n    border-radius: 10px;\n    padding: 10px 15px;\n    color: #fff;\n    font-weight:bold;\n}\n.storage[data-v-672075e6]{\n    position: absolute;top: 50%;left: 50%;\n    transform: translate(-50%,-50%);\n    background-color: #fff;\n    z-index: 1;\n    overflow: visible;\n    display: none;\n}\n.main-storage[data-v-672075e6]{\n    position: relative;\n    overflow: visible;\n}\n.media-contener[data-v-672075e6]{\n    min-width: 70vw;\n    max-height: 70vh;\n    min-height: 70px;\n    border: solid 1px #aaa;\n    overflow-y: scroll;\n}\n.s-loading[data-v-672075e6]{\n    position: absolute;\n    top: 50%;left: 50%;\n    transform: translate(-50%,-50%);\n    z-index: 1;\n}\ndiv.media[data-v-672075e6] {\n    margin: 5px;\n    border: 1px solid #ccc;\n    float: left;\n    width: 200px;\n    position: relative;\n}\ndiv.media[data-v-672075e6]:hover {\n    border: 1px solid #777;\n}\ndiv.media embed[data-v-672075e6] {\n    width: 100%;\n    height: auto;\n}\n.storage-controllers[data-v-672075e6]{\n    position: absolute;\n    top: 0;left: 0;\n    transform: translate(0,-100%);\n    width: 100%;\n    max-width:300px;\n}\n.storage-controllers .right[data-v-672075e6]{\n    float: right;\n}\n.storage-controllers .left[data-v-672075e6]{\n    float: left;\n}\n.btn[data-v-672075e6]{\n    background-color: #07f;\n    color: #fff;\n}\n.selected-mark[data-v-672075e6]{\n    background-color: #09f;\n    border-radius: 100%;\n    position: absolute;\n    color: #fff;\n    font-size: 20px;\n    display: none;\n}\nsvg[data-v-672075e6]{\n    width: 100px;\n    height: 100px;\n    margin: 20px;\n    display:none;\n}\n@media only screen and (max-width: 701px) {\n.main[data-v-672075e6]{\n        width: 100%;\n}\n.storage[data-v-672075e6]{\n        width: 50vh;\n}\ndiv.media[data-v-672075e6] {\n    width: 125px;\n}\n}\n", ""]);
+exports.push([module.i, "\n.main[data-v-672075e6]{\n    width: 730px;\n    margin: 0 auto;\n}\n.form[data-v-672075e6]{\n    width: 100%;\n}\n.form>.content[data-v-672075e6]{\n    width: 100%;\n    resize: none;\n    scroll-behavior: smooth;\n    border:none;\n    border-bottom: 1px solid #ccc;\n}\n.button[data-v-672075e6]{\n    background-color: #07f;\n    border:none;\n    display: inline-block;\n    border-radius: 10px;\n    padding: 10px 15px;\n    color: #fff;\n    font-weight:bold;\n}\n.storage[data-v-672075e6]{\n    position: absolute;top: 50%;left: 50%;\n    transform: translate(-50%,-50%);\n    background-color: #fff;\n    z-index: 1;\n    overflow: visible;\n    display: none;\n}\n.main-storage[data-v-672075e6]{\n    position: relative;\n    overflow: visible;\n}\n.media-contener[data-v-672075e6]{\n    min-width: 70vw;\n    max-height: 70vh;\n    min-height: 70px;\n    border: solid 1px #aaa;\n    overflow-y: scroll;\n}\n.selector[data-v-672075e6]{\n    position: absolute;\n    top: 0;left: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2;\n    background-color: transparent;\n    cursor: pointer;\n    content: '';\n}\n.s-loading[data-v-672075e6]{\n    position: absolute;\n    top: 50%;left: 50%;\n    transform: translate(-50%,-50%);\n    z-index: 1;\n}\ndiv.media[data-v-672075e6] {\n    margin: 5px;\n    border: 1px solid #ccc;\n    float: left;\n    width: 200px;\n    position: relative;\n}\ndiv.media[data-v-672075e6]:hover {\n    border: 1px solid #777;\n}\ndiv.media embed[data-v-672075e6] {\n    width: 100%;\n    height: auto;\n}\n.storage-controllers[data-v-672075e6]{\n    position: absolute;\n    top: 0;left: 0;\n    transform: translate(0,-100%);\n    width: 100%;\n    max-width:300px;\n}\n.storage-controllers .right[data-v-672075e6]{\n    float: right;\n}\n.storage-controllers .left[data-v-672075e6]{\n    float: left;\n}\n.btn[data-v-672075e6]{\n    background-color: #07f;\n    color: #fff;\n}\n.selected-mark[data-v-672075e6]{\n    background-color: #09f;\n    border-radius: 100%;\n    position: absolute;\n    color: #fff;\n    font-size: 20px;\n    display: none;\n}\nsvg[data-v-672075e6]{\n    width: 100px;\n    height: 100px;\n    margin: 20px;\n    display:none;\n}\n@media only screen and (max-width: 701px) {\n.main[data-v-672075e6]{\n        width: 100%;\n}\n.storage[data-v-672075e6]{\n        width: 50vh;\n}\ndiv.media[data-v-672075e6] {\n    width: 125px;\n}\n}\n", ""]);
 
 // exports
 
@@ -4191,7 +4235,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.my-posts[data-v-595a99d0]{\n    margin-top: 20px;\n}\n.post-image[data-v-595a99d0]{\n    width: 60px;height: auto;\n    border-radius: 100%;\n}\n.comment[data-v-595a99d0]{\n    margin-top: 20px;\n    box-sizing: border-box;\n    padding: 5px 15px 15px;\n    border: solid 1px #ccc;\n    border-radius: 7px;\n}\n.post-gal[data-v-595a99d0]{\n    width: 100%;\n}\n.post-gal[data-v-595a99d0]::after{\n    content: '';\n    display: table;\n    clear: both;\n}\n.image-contener[data-v-595a99d0]{\n    width:49%;\n    float: left;\n}\n.image-contener img[data-v-595a99d0]{\n    width: 100%;\n    height: auto;\n}\n@media only screen  and (max-width:500px){\n}\n", ""]);
+exports.push([module.i, "\n.my-posts[data-v-595a99d0]{\n    margin-top: 20px;\n}\n.post-image[data-v-595a99d0]{\n    width: 60px;height: auto;\n    border-radius: 100%;\n}\n.comment[data-v-595a99d0]{\n    margin-top: 20px;\n    box-sizing: border-box;\n    padding: 5px 15px 15px;\n    border: solid 1px #ccc;\n    border-radius: 7px;\n}\n.post-gal[data-v-595a99d0]{\n    width: 100%;\n}\n.post-gal[data-v-595a99d0]::after{\n    content: '';\n    display: table;\n    clear: both;\n}\n.image-contener[data-v-595a99d0]{\n    float: left;\n}\n.image-contener embed[data-v-595a99d0]{\n    width: 100%;\n    height: auto;\n}\n.new-Posts[data-v-595a99d0]{\n    position: fixed;\n    top: 5px;left: 50%;\n    transform: translate(-50%,-150%);\n    padding: 15px;\n    background-color:#07f;\n    border-radius: 15px;\n    color:#fff;\n    cursor: pointer;\n    z-index: 10;\n}\n.hide[data-v-595a99d0]{\n    -webkit-animation: hide-data-v-595a99d0 1.5s forwards;\n            animation: hide-data-v-595a99d0 1.5s forwards;\n}\n.show[data-v-595a99d0]{\n    -webkit-animation: show-data-v-595a99d0 1.5s forwards;\n            animation: show-data-v-595a99d0 1.5s forwards;\n}\n@-webkit-keyframes hide-data-v-595a99d0 {\nfrom{\n        transform: translateY(0);\n}\nto{\n        transform: translateY(-150%);\n}\n}\n@keyframes hide-data-v-595a99d0 {\nfrom{\n        transform: translateY(0);\n}\nto{\n        transform: translateY(-150%);\n}\n}\n@-webkit-keyframes show-data-v-595a99d0 {\nfrom{\n        transform: translateY(-150%);\n}\nto{\n        transform: translateY(0);\n}\n}\n@keyframes show-data-v-595a99d0 {\nfrom{\n        transform: translateY(-150%);\n}\nto{\n        transform: translateY(0);\n}\n}\n/*@media only screen  and (max-width:500px){\n    \n}*/\n", ""]);
 
 // exports
 
@@ -30667,21 +30711,22 @@ var render = function() {
           "div",
           { staticClass: "media-contener" },
           _vm._l(_vm.media, function(m) {
-            return _c(
-              "div",
-              { staticClass: "media", on: { click: _vm.select } },
-              [
-                _c("embed", {
-                  attrs: {
-                    src: m.split("public")[1]
-                      ? "storage" + m.split("public")[1]
-                      : "storage/" + m.split("public")[0]
-                  }
-                }),
-                _vm._v(" "),
-                _c("span", { staticClass: "selected-mark" }, [_vm._v("✓")])
-              ]
-            )
+            return _c("div", { staticClass: "media" }, [
+              _c("div", { staticClass: "selector", on: { click: _vm.select } }),
+              _vm._v(" "),
+              _c("embed", {
+                ref: "mediaHolder",
+                refInFor: true,
+                attrs: {
+                  src: m.split("public")[1]
+                    ? "storage" + m.split("public")[1]
+                    : "storage/" + m.split("public")[0],
+                  muted: ""
+                }
+              }),
+              _vm._v(" "),
+              _c("span", { staticClass: "selected-mark" }, [_vm._v("✓")])
+            ])
           }),
           0
         )
@@ -30749,72 +30794,93 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    _vm._l(_vm.posts, function(p) {
-      return _c("div", { staticClass: "container my-posts" }, [
-        _c("div", { staticClass: "row justify-content-center" }, [
-          _c("div", { staticClass: "col-md-8" }, [
-            _c("div", { staticClass: "card" }, [
-              _c("div", { staticClass: "card-header" }, [
-                _c("img", {
-                  staticClass: "post-image",
-                  attrs: { src: p.user.user_image }
-                }),
-                _vm._v(" "),
-                _c("a", { attrs: { href: "/" + p.user.id } }, [
-                  _vm._v(_vm._s(p.user.name) + " ")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card-body" }, [
-                _vm._v(
-                  "\n                        " +
-                    _vm._s(p.content) +
-                    "\n                        "
-                ),
-                _c(
-                  "div",
-                  { staticClass: "post-gal" },
-                  _vm._l(p.media, function(M) {
-                    return _c("div", { staticClass: "image-contener" }, [
-                      _c("img", { attrs: { src: M.src } })
-                    ])
+    [
+      _c(
+        "div",
+        {
+          ref: "newPosts",
+          class: _vm.newPostsAdded ? "new-Posts show" : "new-Posts hide",
+          on: {
+            click: function($event) {
+              return _vm.refresh()
+            }
+          }
+        },
+        [_vm._v("♣ " + _vm._s(_vm.newPostsAdded) + " new Post")]
+      ),
+      _vm._v(" "),
+      _vm._l(_vm.posts, function(p) {
+        return _c("div", { staticClass: "container my-posts" }, [
+          _c("div", { staticClass: "row justify-content-center" }, [
+            _c("div", { staticClass: "col-md-8" }, [
+              _c("div", { staticClass: "card" }, [
+                _c("div", { staticClass: "card-header" }, [
+                  _c("img", {
+                    staticClass: "post-image",
+                    attrs: { src: p.user.user_image }
                   }),
-                  0
-                ),
+                  _vm._v(" "),
+                  _c("a", { attrs: { href: "/" + p.user.id } }, [
+                    _vm._v(_vm._s(p.user.name) + " ")
+                  ])
+                ]),
                 _vm._v(" "),
-                _c("br"),
-                _c("hr"),
-                _vm._v(" "),
-                p.LC
-                  ? _c("div", { staticClass: "comment" }, [
-                      _c("div", { staticClass: "header" }, [
-                        _c("small", [_vm._v(_vm._s(p.LC.auther_name))]),
+                _c("div", { staticClass: "card-body" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(p.content) +
+                      "\n                        "
+                  ),
+                  _c(
+                    "div",
+                    { staticClass: "post-gal" },
+                    _vm._l(p.media, function(M) {
+                      return _c(
+                        "div",
+                        {
+                          staticClass: "image-contener",
+                          style: "width:" + (100 / p.media.length - 1) + "%;"
+                        },
+                        [_c("embed", { attrs: { src: M.src } })]
+                      )
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _c("br"),
+                  _c("hr"),
+                  _vm._v(" "),
+                  p.LC
+                    ? _c("div", { staticClass: "comment" }, [
+                        _c("div", { staticClass: "header" }, [
+                          _c("small", [_vm._v(_vm._s(p.LC.auther_name))]),
+                          _vm._v(" "),
+                          _c("small", [_vm._v(_vm._s(p.LC.created_at))])
+                        ]),
                         _vm._v(" "),
-                        _c("small", [_vm._v(_vm._s(p.LC.created_at))])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "comment-body" }, [
-                        _vm._v(
-                          "\n                                " +
-                            _vm._s(p.LC.content) +
-                            "\n                            "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("hr")
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                _c("a", { attrs: { href: "/" + p.id + "/comments" } }, [
-                  _vm._v(_vm._s(p.NOC) + " comments...")
+                        _c("div", { staticClass: "comment-body" }, [
+                          _vm._v(
+                            "\n                                " +
+                              _vm._s(p.LC.content) +
+                              "\n                            "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("hr")
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("a", { attrs: { href: "/" + p.id + "/comments" } }, [
+                    _vm._v(_vm._s(p.NOC) + " comments...")
+                  ])
                 ])
               ])
             ])
           ])
         ])
-      ])
-    }),
-    0
+      })
+    ],
+    2
   )
 }
 var staticRenderFns = []

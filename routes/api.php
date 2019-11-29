@@ -19,6 +19,10 @@ Route::post( '/saveComm','CommentController@saveCom');
 Route::post('/user/{user}', 'userController@updateImage');
 Route::post('/files/{user}', 'userController@uploadFiles');
 Route::get('/getMidea/{user}','userController@getMidea');
+Route::post('/newPosts','userController@getNewPosts');
 Route::middleware('auth:api')->group(function () {
     Route::post('/posts/{post}/comment','CommentController@store');
+});
+Route::get('/test',function(){
+    return view('test');
 });

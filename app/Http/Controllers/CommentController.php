@@ -11,6 +11,9 @@ use Illuminate\Foundation\Auth\User;
 
 class CommentController extends Controller
 {
+    //public function __construct(){
+    //    $this->middleware('auth');
+    //}
     /////////////////////////////////////////////////////////////////////////// IDEX
     public function index(post $post){
         return response()->json($post->with('user')->with('comments')->get());

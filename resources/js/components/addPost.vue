@@ -38,8 +38,9 @@
                         </svg>
                     </div>
                 <div class="media-contener">
-                    <div class="media" v-for="m in media" @click="select">
-                        <embed :src="(m.split('public')[1])?'storage'+m.split('public')[1]:'storage/'+m.split('public')[0]">
+                    <div class="media" v-for="m in media">
+                        <div class="selector" @click="select"></div>
+                        <embed ref="mediaHolder"  :src="(m.split('public')[1])?'storage'+m.split('public')[1]:'storage/'+m.split('public')[0]" muted >
                         <span class="selected-mark">&#10003;</span>
                     </div>
                 </div>
@@ -77,6 +78,12 @@
             axios.get(`/api/getMidea/${this.user_id}`).then(
                     response=>{
                         this.media=response.data;
+                        //setTimeout(()=>{
+                            //this.$refs.mediaHolder.forEach(element => {
+                            //    //element.play=false;
+                            //    console.log(element);
+                            //});
+                        //    },200);
                     }
                 ).catch(err=>{
                     console.log(err);
@@ -103,15 +110,15 @@
             var counter=-1,
                 ele=this.selected.find(function(element){
                     counter++;
-                    return element == e.target.src;
+                    return element == e.target.parentElement.children[1].src;
                 });
             if(ele != undefined){
                 this.selected.splice(counter,1);
-                e.target.parentElement.children[1].style.display='none';
+                e.target.parentElement.children[2].style.display='none';
             }
             else{
-                this.selected.push(e.target.src);
-                e.target.parentElement.children[1].style.display='inline-block';
+                this.selected.push(e.target.parentElement.children[1].src);
+                e.target.parentElement.children[2].style.display='inline-block';
             }
         }
     }
@@ -161,6 +168,16 @@
         min-height: 70px;
         border: solid 1px #aaa;
         overflow-y: scroll;
+    }
+    .selector{
+        position: absolute;
+        top: 0;left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
+        background-color: transparent;
+        cursor: pointer;
+        content: '';
     }
     .s-loading{
         position: absolute;
