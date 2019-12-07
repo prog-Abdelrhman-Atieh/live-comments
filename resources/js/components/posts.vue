@@ -90,7 +90,7 @@
         }
     }
 </script>
-<style scoped>
+<style scoped>/*----------------------------*/
     .my-posts{
         margin-top: 20px;
     }
