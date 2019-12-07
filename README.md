@@ -6,6 +6,6 @@
     5-write the command (php artisan key:generate)
     6-write the command (php artisan migrate)
     7-write the command (npm run dev)
-    8-write the command (php artisan addPosts)
+    8-write the command (php artisan storage:link)
     9-write the command (php artisan serve)
     10-in new tap of CMD write the command (php artisan websockets:serve)
