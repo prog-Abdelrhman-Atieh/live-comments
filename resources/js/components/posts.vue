@@ -9,8 +9,7 @@
                     <div class="card-body">
                         {{p.content}}
                         <div class="post-gal">
-                            <div class="image-contener" v-for="M in p.media" :style="'width:'+(100/p.media.length-1)+'%;'">
-                                <embed :src="M.src">
+                            <div class="image-contener" v-for="M in p.media" :style="'width:'+(100/p.media.length-1)+'%;'" v-html="addMedia(M.src)">
                             </div>
                         </div>
                         <br><hr>
@@ -78,6 +77,15 @@
                         window.scrollTo(0,0);
                     }
                 );
+            },
+            addMedia(m){
+                var slices=m.split('.'),holder;
+                window.mainInit.videos.forEach(element => {
+                    if(element == slices[slices.length-1]){
+                        holder=`<video width='100%' height='auto' src='${m}' controls ></video>`;
+                    }
+                });
+                return holder || `<img width='100%' height='auto' src='${m}'>`;
             }
         }
     }

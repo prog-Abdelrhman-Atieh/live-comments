@@ -40,8 +40,8 @@
                 <div class="media-contener">
                     <div class="media" v-for="m in media">
                         <div class="selector" @click="select"></div>
-                        <embed ref="mediaHolder"  :src="(m.split('public')[1])?'storage'+m.split('public')[1]:'storage/'+m.split('public')[0]" muted >
-                        <span class="selected-mark">&#10003;</span>
+                        <div class="senior-content" v-html="checkEx(m)"></div>
+                        <span class="selected-mark" ref="selectSign">&#10003;</span>
                     </div>
                 </div>
             </div>
@@ -68,6 +68,10 @@
                 return axios.post(`/api/addPost/${this.user_id}`,info).then(
                     response=>{
                         this.postContent=null;
+                        this.selected.splice(0,this.selected.length);
+                        this.$refs.selectSign.forEach(ele=>{
+                            ele.style.display='none';
+                        });
                         console.log('done',response.data);
                     }
                 ).catch(err=>{
@@ -78,6 +82,7 @@
             axios.get(`/api/getMidea/${this.user_id}`).then(
                     response=>{
                         this.media=response.data;
+                        console.log(this.media[0].split('.'),'$$$$$$$$$$$$$$$$$$$$$');
                         //setTimeout(()=>{
                             //this.$refs.mediaHolder.forEach(element => {
                             //    //element.play=false;
@@ -110,16 +115,26 @@
             var counter=-1,
                 ele=this.selected.find(function(element){
                     counter++;
-                    return element == e.target.parentElement.children[1].src;
+                    return element == e.target.parentElement.children[1].children[0].src;
                 });
             if(ele != undefined){
                 this.selected.splice(counter,1);
                 e.target.parentElement.children[2].style.display='none';
             }
             else{
-                this.selected.push(e.target.parentElement.children[1].src);
+                this.selected.push(e.target.parentElement.children[1].children[0].src);
                 e.target.parentElement.children[2].style.display='inline-block';
             }
+            console.log(this.selected);
+        },
+        checkEx(m){
+            var slices=m.split('.'),holder;
+            window.mainInit.videos.forEach(element => {
+                if(element == slices[slices.length-1]){
+                    holder=`<video width='100%' height='auto' src='${(m.split('public')[1])?'storage'+m.split('public')[1]:'storage/'+m.split('public')[0]}' muted ></video>`;
+                }
+            });
+            return holder || `<img width='100%' height='auto' src='${(m.split('public')[1])?'storage'+m.split('public')[1]:'storage/'+m.split('public')[0]}'>`;
         }
     }
 
@@ -195,7 +210,7 @@
     div.media:hover {
         border: 1px solid #777;
     }
-    div.media embed {
+    div.media .senior-content{
         width: 100%;
         height: auto;
     }

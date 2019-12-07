@@ -27,6 +27,7 @@ class HomeController extends Controller
         return view('home',compact('post'));
     }
     public function show(post $post){
-        return view('posts.post',compact('post'));
+        $vedios_ex=['webm','ogg','mp4','avi','wmv','mov','swf','flv','swf'];
+        return view('posts.post',compact('post','vedios_ex'));
     }
 }

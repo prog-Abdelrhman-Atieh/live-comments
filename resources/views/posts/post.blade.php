@@ -13,7 +13,11 @@
                         <div class="post-gal">
                             @foreach ($post->media as $media)
                                 <div class="image-contener">
-                                    <embed src="{{$media->src}}">
+                                    @if (in_array(explode('.',$media->src)[1],$vedios_ex))
+                                        <video src="{{$media->src}}" controls></video>
+                                        @else
+                                        <img src="{{$media->src}}">
+                                    @endif
                                 </div>
                             @endforeach
                         </div>
@@ -39,7 +43,7 @@
             width: 100%;
             float: left;
         }
-        .image-contener embed{
+        .image-contener video,.image-contener img{
             width: 100%;
             height: auto;
         }

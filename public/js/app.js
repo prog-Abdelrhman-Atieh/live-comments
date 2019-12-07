@@ -1987,6 +1987,13 @@ var newPost = {
       };
       return axios.post("/api/addPost/".concat(this.user_id), info).then(function (response) {
         _this.postContent = null;
+
+        _this.selected.splice(0, _this.selected.length);
+
+        _this.$refs.selectSign.forEach(function (ele) {
+          ele.style.display = 'none';
+        });
+
         console.log('done', response.data);
       })["catch"](function (err) {
         console.log(err);
@@ -1996,7 +2003,8 @@ var newPost = {
       var _this2 = this;
 
       axios.get("/api/getMidea/".concat(this.user_id)).then(function (response) {
-        _this2.media = response.data; //setTimeout(()=>{
+        _this2.media = response.data;
+        console.log(_this2.media[0].split('.'), '$$$$$$$$$$$$$$$$$$$$$'); //setTimeout(()=>{
         //this.$refs.mediaHolder.forEach(element => {
         //    //element.play=false;
         //    console.log(element);
@@ -2032,16 +2040,28 @@ var newPost = {
       var counter = -1,
           ele = this.selected.find(function (element) {
         counter++;
-        return element == e.target.parentElement.children[1].src;
+        return element == e.target.parentElement.children[1].children[0].src;
       });
 
       if (ele != undefined) {
         this.selected.splice(counter, 1);
         e.target.parentElement.children[2].style.display = 'none';
       } else {
-        this.selected.push(e.target.parentElement.children[1].src);
+        this.selected.push(e.target.parentElement.children[1].children[0].src);
         e.target.parentElement.children[2].style.display = 'inline-block';
       }
+
+      console.log(this.selected);
+    },
+    checkEx: function checkEx(m) {
+      var slices = m.split('.'),
+          holder;
+      window.mainInit.videos.forEach(function (element) {
+        if (element == slices[slices.length - 1]) {
+          holder = "<video width='100%' height='auto' src='".concat(m.split('public')[1] ? 'storage' + m.split('public')[1] : 'storage/' + m.split('public')[0], "' muted ></video>");
+        }
+      });
+      return holder || "<img width='100%' height='auto' src='".concat(m.split('public')[1] ? 'storage' + m.split('public')[1] : 'storage/' + m.split('public')[0], "'>");
     }
   }
 };
@@ -2130,7 +2150,6 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
-//
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
@@ -2182,6 +2201,16 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
 
         window.scrollTo(0, 0);
       });
+    },
+    addMedia: function addMedia(m) {
+      var slices = m.split('.'),
+          holder;
+      window.mainInit.videos.forEach(function (element) {
+        if (element == slices[slices.length - 1]) {
+          holder = "<video width='100%' height='auto' src='".concat(m, "' controls ></video>");
+        }
+      });
+      return holder || "<img width='100%' height='auto' src='".concat(m, "'>");
     }
   }
 });
@@ -4216,7 +4245,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.main[data-v-672075e6]{\n    width: 730px;\n    margin: 0 auto;\n}\n.form[data-v-672075e6]{\n    width: 100%;\n}\n.form>.content[data-v-672075e6]{\n    width: 100%;\n    resize: none;\n    scroll-behavior: smooth;\n    border:none;\n    border-bottom: 1px solid #ccc;\n}\n.button[data-v-672075e6]{\n    background-color: #07f;\n    border:none;\n    display: inline-block;\n    border-radius: 10px;\n    padding: 10px 15px;\n    color: #fff;\n    font-weight:bold;\n}\n.storage[data-v-672075e6]{\n    position: absolute;top: 50%;left: 50%;\n    transform: translate(-50%,-50%);\n    background-color: #fff;\n    z-index: 1;\n    overflow: visible;\n    display: none;\n}\n.main-storage[data-v-672075e6]{\n    position: relative;\n    overflow: visible;\n}\n.media-contener[data-v-672075e6]{\n    min-width: 70vw;\n    max-height: 70vh;\n    min-height: 70px;\n    border: solid 1px #aaa;\n    overflow-y: scroll;\n}\n.selector[data-v-672075e6]{\n    position: absolute;\n    top: 0;left: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2;\n    background-color: transparent;\n    cursor: pointer;\n    content: '';\n}\n.s-loading[data-v-672075e6]{\n    position: absolute;\n    top: 50%;left: 50%;\n    transform: translate(-50%,-50%);\n    z-index: 1;\n}\ndiv.media[data-v-672075e6] {\n    margin: 5px;\n    border: 1px solid #ccc;\n    float: left;\n    width: 200px;\n    position: relative;\n}\ndiv.media[data-v-672075e6]:hover {\n    border: 1px solid #777;\n}\ndiv.media embed[data-v-672075e6] {\n    width: 100%;\n    height: auto;\n}\n.storage-controllers[data-v-672075e6]{\n    position: absolute;\n    top: 0;left: 0;\n    transform: translate(0,-100%);\n    width: 100%;\n    max-width:300px;\n}\n.storage-controllers .right[data-v-672075e6]{\n    float: right;\n}\n.storage-controllers .left[data-v-672075e6]{\n    float: left;\n}\n.btn[data-v-672075e6]{\n    background-color: #07f;\n    color: #fff;\n}\n.selected-mark[data-v-672075e6]{\n    background-color: #09f;\n    border-radius: 100%;\n    position: absolute;\n    color: #fff;\n    font-size: 20px;\n    display: none;\n}\nsvg[data-v-672075e6]{\n    width: 100px;\n    height: 100px;\n    margin: 20px;\n    display:none;\n}\n@media only screen and (max-width: 701px) {\n.main[data-v-672075e6]{\n        width: 100%;\n}\n.storage[data-v-672075e6]{\n        width: 50vh;\n}\ndiv.media[data-v-672075e6] {\n    width: 125px;\n}\n}\n", ""]);
+exports.push([module.i, "\n.main[data-v-672075e6]{\n    width: 730px;\n    margin: 0 auto;\n}\n.form[data-v-672075e6]{\n    width: 100%;\n}\n.form>.content[data-v-672075e6]{\n    width: 100%;\n    resize: none;\n    scroll-behavior: smooth;\n    border:none;\n    border-bottom: 1px solid #ccc;\n}\n.button[data-v-672075e6]{\n    background-color: #07f;\n    border:none;\n    display: inline-block;\n    border-radius: 10px;\n    padding: 10px 15px;\n    color: #fff;\n    font-weight:bold;\n}\n.storage[data-v-672075e6]{\n    position: absolute;top: 50%;left: 50%;\n    transform: translate(-50%,-50%);\n    background-color: #fff;\n    z-index: 1;\n    overflow: visible;\n    display: none;\n}\n.main-storage[data-v-672075e6]{\n    position: relative;\n    overflow: visible;\n}\n.media-contener[data-v-672075e6]{\n    min-width: 70vw;\n    max-height: 70vh;\n    min-height: 70px;\n    border: solid 1px #aaa;\n    overflow-y: scroll;\n}\n.selector[data-v-672075e6]{\n    position: absolute;\n    top: 0;left: 0;\n    width: 100%;\n    height: 100%;\n    z-index: 2;\n    background-color: transparent;\n    cursor: pointer;\n    content: '';\n}\n.s-loading[data-v-672075e6]{\n    position: absolute;\n    top: 50%;left: 50%;\n    transform: translate(-50%,-50%);\n    z-index: 1;\n}\ndiv.media[data-v-672075e6] {\n    margin: 5px;\n    border: 1px solid #ccc;\n    float: left;\n    width: 200px;\n    position: relative;\n}\ndiv.media[data-v-672075e6]:hover {\n    border: 1px solid #777;\n}\ndiv.media .senior-content[data-v-672075e6]{\n    width: 100%;\n    height: auto;\n}\n.storage-controllers[data-v-672075e6]{\n    position: absolute;\n    top: 0;left: 0;\n    transform: translate(0,-100%);\n    width: 100%;\n    max-width:300px;\n}\n.storage-controllers .right[data-v-672075e6]{\n    float: right;\n}\n.storage-controllers .left[data-v-672075e6]{\n    float: left;\n}\n.btn[data-v-672075e6]{\n    background-color: #07f;\n    color: #fff;\n}\n.selected-mark[data-v-672075e6]{\n    background-color: #09f;\n    border-radius: 100%;\n    position: absolute;\n    color: #fff;\n    font-size: 20px;\n    display: none;\n}\nsvg[data-v-672075e6]{\n    width: 100px;\n    height: 100px;\n    margin: 20px;\n    display:none;\n}\n@media only screen and (max-width: 701px) {\n.main[data-v-672075e6]{\n        width: 100%;\n}\n.storage[data-v-672075e6]{\n        width: 50vh;\n}\ndiv.media[data-v-672075e6] {\n    width: 125px;\n}\n}\n", ""]);
 
 // exports
 
@@ -30714,18 +30743,20 @@ var render = function() {
             return _c("div", { staticClass: "media" }, [
               _c("div", { staticClass: "selector", on: { click: _vm.select } }),
               _vm._v(" "),
-              _c("embed", {
-                ref: "mediaHolder",
-                refInFor: true,
-                attrs: {
-                  src: m.split("public")[1]
-                    ? "storage" + m.split("public")[1]
-                    : "storage/" + m.split("public")[0],
-                  muted: ""
-                }
+              _c("div", {
+                staticClass: "senior-content",
+                domProps: { innerHTML: _vm._s(_vm.checkEx(m)) }
               }),
               _vm._v(" "),
-              _c("span", { staticClass: "selected-mark" }, [_vm._v("✓")])
+              _c(
+                "span",
+                {
+                  ref: "selectSign",
+                  refInFor: true,
+                  staticClass: "selected-mark"
+                },
+                [_vm._v("✓")]
+              )
             ])
           }),
           0
@@ -30835,14 +30866,11 @@ var render = function() {
                     "div",
                     { staticClass: "post-gal" },
                     _vm._l(p.media, function(M) {
-                      return _c(
-                        "div",
-                        {
-                          staticClass: "image-contener",
-                          style: "width:" + (100 / p.media.length - 1) + "%;"
-                        },
-                        [_c("embed", { attrs: { src: M.src } })]
-                      )
+                      return _c("div", {
+                        staticClass: "image-contener",
+                        style: "width:" + (100 / p.media.length - 1) + "%;",
+                        domProps: { innerHTML: _vm._s(_vm.addMedia(M.src)) }
+                      })
                     }),
                     0
                   ),
